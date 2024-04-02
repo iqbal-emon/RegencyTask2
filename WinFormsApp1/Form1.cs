@@ -48,71 +48,61 @@ namespace WinFormsApp1
                 AddActionButtons();
             }
             // Call the method to add action buttons after setting the data source
-            
+
         }
         private void AddActionButtons()
         {
-            // Check if the 'Edit' link column already exists
-            if (!dataGridView1.Columns.Contains("editLink"))
+            // Check if the 'Edit' button column already exists
+            if (!dataGridView1.Columns.Contains("editButton"))
             {
                 // Add a button column for 'Edit'
-                DataGridViewLinkColumn editLink = new DataGridViewLinkColumn();
-                editLink.UseColumnTextForLinkValue = true;
-                editLink.HeaderText = "Edit";
-                editLink.Name = "editLink"; // Name property is used for Contains check
-                editLink.LinkBehavior = LinkBehavior.SystemDefault;
-                editLink.Text = "Edit";
-                dataGridView1.Columns.Add(editLink);
+                DataGridViewButtonColumn editButton = new DataGridViewButtonColumn();
+                editButton.UseColumnTextForButtonValue = true; // This property will make the button display the text
+                editButton.HeaderText = "Edit";
+                editButton.Name = "editButton"; // Name property is used for Contains check
+                editButton.Text = "Edit";
+                dataGridView1.Columns.Add(editButton);
             }
 
-            // Repeat the same check for 'Details' and 'Delete' link columns
-            if (!dataGridView1.Columns.Contains("detailsLink"))
+            // Repeat the same check for 'Details' and 'Delete' button columns
+            if (!dataGridView1.Columns.Contains("detailsButton"))
             {
                 // Add a button column for 'Details'
-                DataGridViewLinkColumn detailsLink = new DataGridViewLinkColumn();
-                detailsLink.UseColumnTextForLinkValue = true;
-                detailsLink.HeaderText = "Details";
-                detailsLink.Name = "detailsLink";
-                detailsLink.LinkBehavior = LinkBehavior.SystemDefault;
-                detailsLink.Text = "Details";
-                dataGridView1.Columns.Add(detailsLink);
+                DataGridViewButtonColumn detailsButton = new DataGridViewButtonColumn();
+                detailsButton.UseColumnTextForButtonValue = true;
+                detailsButton.HeaderText = "Details";
+                detailsButton.Name = "detailsButton";
+                detailsButton.Text = "Details";
+                dataGridView1.Columns.Add(detailsButton);
             }
 
-            if (!dataGridView1.Columns.Contains("deleteLink"))
+            if (!dataGridView1.Columns.Contains("deleteButton"))
             {
                 // Add a button column for 'Delete'
-                DataGridViewLinkColumn deleteLink = new DataGridViewLinkColumn();
-                deleteLink.UseColumnTextForLinkValue = true;
-                deleteLink.HeaderText = "Delete";
-                deleteLink.Name = "deleteLink";
-                deleteLink.LinkBehavior = LinkBehavior.SystemDefault;
-                deleteLink.Text = "Delete";
-                dataGridView1.Columns.Add(deleteLink);
+                DataGridViewButtonColumn deleteButton = new DataGridViewButtonColumn();
+                deleteButton.UseColumnTextForButtonValue = true;
+                deleteButton.HeaderText = "Delete";
+                deleteButton.Name = "deleteButton";
+                deleteButton.Text = "Delete";
+                dataGridView1.Columns.Add(deleteButton);
             }
         }
-
-
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             var senderGrid = (DataGridView)sender;
             Guid studentId;
-            // Check if the click is on a link column
-            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewLinkColumn && e.RowIndex >= 0)
+
+            // Check if the click is on a button column
+            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
             {
-                // Get the text of the clicked cell
-                string linkValue = senderGrid[e.ColumnIndex, e.RowIndex].Value as string;
+                string buttonText = senderGrid.Columns[e.ColumnIndex].HeaderText;
 
-                // Show the text in a MessageBox
-                MessageBox.Show($"Button clicked: {linkValue}");
-
-                // Here you can also check for the specific text and perform the corresponding action
-                switch (linkValue)
+                switch (buttonText)
                 {
-
                     case "Edit":
                         // Fetch the selected student's details
-                         studentId = Guid.Parse(senderGrid["Id", e.RowIndex].Value.ToString());
+                        studentId = Guid.Parse(senderGrid["Id", e.RowIndex].Value.ToString());
                         Student studentToEdit = FetchStudentDetails(studentId);
 
                         // Open Form2 with the student details
@@ -121,13 +111,9 @@ namespace WinFormsApp1
                             form3.ShowDialog();
                         }
                         break;
-
-
-
-
                     case "Details":
                         // Fetch the selected student's details
-                         studentId = Guid.Parse(senderGrid["Id", e.RowIndex].Value.ToString());
+                        studentId = Guid.Parse(senderGrid["Id", e.RowIndex].Value.ToString());
                         Student studentDetails = FetchStudentDetails(studentId);
 
                         // Open Form4 with the student details
@@ -137,14 +123,13 @@ namespace WinFormsApp1
                         }
                         break;
                     case "Delete":
-                   
                         // Confirm user wants to delete
                         if (MessageBox.Show("Are you sure you want to delete this record?", "Delete Student", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
                             try
                             {
                                 // Parse the GUID from the DataGridView assuming the 'Id' column is the GUID of the student
-                                 studentId = Guid.Parse(senderGrid["Id", e.RowIndex].Value.ToString());
+                                studentId = Guid.Parse(senderGrid["Id", e.RowIndex].Value.ToString());
 
                                 // Perform the delete operation
                                 using (var _dbContext = new StudentManagementContext())
@@ -172,15 +157,13 @@ namespace WinFormsApp1
                             }
                         }
                         break;
-
-                      
                     default:
                         MessageBox.Show("Unknown action.");
                         break;
                 }
             }
-
         }
+
         private Student FetchStudentDetails(Guid id)
         {
             using (var _dbContext = new StudentManagementContext())
@@ -189,5 +172,9 @@ namespace WinFormsApp1
             }
         }
 
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

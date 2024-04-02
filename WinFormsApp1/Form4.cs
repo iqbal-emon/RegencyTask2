@@ -19,6 +19,7 @@ namespace WinFormsApp1
             InitializeComponent();
 
             Console.WriteLine(student);
+
             label4.Text = student.Class?.Name ?? "";
 
 
